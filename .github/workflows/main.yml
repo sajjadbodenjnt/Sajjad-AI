@@ -10,13 +10,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Start tmate Session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          detached: true # এটি যুক্ত করলে স্টেপটি আটকে থাকবে না, ব্যাকগ্রাউন্ডে চলবে
-
-      - name: Print Connection Info
+      - name: Install tmate
         run: |
-          echo "Tmate session is running in the background."
-          sleep 10
-          cat /tmp/tmate.sock 2>/dev/null || true
+          sudo apt-get update
+          sudo apt-get install -y tmate
+
+      - name: Start tmate and Keep Alive
+        run: |
+          tmate -k
+          echo "=== SSH CONNECTION COMMANDS ==="
+          tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}'
+          tmate -S /tmp/tmate.sock display -p '#{tmate_web}'
+          # সেশন চালু রাখার জন্য সময় বাড়িয়ে দেওয়া হলো (২ ঘণ্টা)
+          sleep 7200
