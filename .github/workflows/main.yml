@@ -12,3 +12,11 @@ jobs:
 
       - name: Start tmate Session
         uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true # এটি যুক্ত করলে স্টেপটি আটকে থাকবে না, ব্যাকগ্রাউন্ডে চলবে
+
+      - name: Print Connection Info
+        run: |
+          echo "Tmate session is running in the background."
+          sleep 10
+          cat /tmp/tmate.sock 2>/dev/null || true
