@@ -1,0 +1,14 @@
+name: Interactive SSH Session
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tmate-ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Start tmate Session
+        uses: mxschmitt/action-tmate@v3
