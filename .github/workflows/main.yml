@@ -4,13 +4,32 @@ on:
   workflow_dispatch:
 
 jobs:
-  tmate-ssh:
+  ssh-session:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: false
+      - name: Set up SSH Server
+        run: |
+          # SSH পাসওয়ার্ড সেট করুন (যেমন: 123456)
+          echo "root:123456" | sudo chpasswd
+          sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+          sudo service ssh restart
+
+      - name: Install Ngrok
+        run: |
+          curl -sSOL https://bin.equilibrium.io/ngrok/ngrok-v3-stable-linux-amd64.tgz || wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+          sudo tar xvzf ngrok-v3-stable-linux-amd64.tgz -C /usr/local/bin
+
+      - name: Start Ngrok Tunnel
+        run: |
+          # এখানে আপনার ngrok authtoken দিন (যদি থাকে, না থাকলে ফ্রি মোডে চলবে)
+          # ngrok config add-authtoken YOUR_AUTHTOKEN
+          echo "=========================================="
+          echo "Run this command in your termux/terminal:"
+          echo "ssh root@0.tcp.in.ngrok.io -p PORT_NUMBER"
+          echo "Password: 123456"
+          echo "=========================================="
+          
+          ngrok tcp 22
