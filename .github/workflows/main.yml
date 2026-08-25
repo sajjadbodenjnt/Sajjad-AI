@@ -10,21 +10,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install tmate
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y tmate
-
-      - name: Start tmate and Get SSH Link
-        run: |
-          # ব্যাকগ্রাউন্ডে tmate সেশন চালু করা
-          tmate -S /tmp/tmate.sock new-session -d
-          tmate -S /tmp/tmate.sock wait tmate-ready
-          
-          echo "=========================================="
-          echo "YOUR TMATE SSH CONNECTION LINK:"
-          tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}'
-          echo "=========================================="
-          
-          # সেশন চালু রাখার জন্য সময় (যেমন ২ ঘণ্টা)
-          sleep 7200
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: false
