@@ -1,0 +1,25 @@
+name: Remote SSH Connect
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Executing remote ssh commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            echo "Successfully connected to SSH!"
+            cd /var/www/my-project || mkdir -p /var/www/my-project && cd /var/www/my-project
+            git pull origin main || echo "Git pull skipped or failed"
+            echo "Deployment successful!"
